@@ -7,6 +7,7 @@ import (
 	"go-rest-api/repository"
 	"go-rest-api/router"
 	"go-rest-api/usecase"
+	"go-rest-api/validator"
 	"os"
 )
 
@@ -20,11 +21,13 @@ func main() {
 	
 	db := db.NewDB()
 	userPepository := repository.NewUserRepository(db)
-	userUsecase := usecase.NewUserUsecase(userPepository)
+	userValidator := validator.NewUserValidator()
+	userUsecase := usecase.NewUserUsecase(userPepository, userValidator)
 	userController := controller.NewUserController(userUsecase)
 
 	taskRepository := repository.NewTaskRepository(db)
-	taskUsecase := usecase.NewTaskUsecase(taskRepository)
+	taskValidator := validator.NewTaskValidator()
+	taskUsecase := usecase.NewTaskUsecase(taskRepository, taskValidator)
 	taskController := controller.NewTaskController(taskUsecase)
 
 	e := router.NewRouter(userController, taskController)
